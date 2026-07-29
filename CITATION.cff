@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use OpenReason in your research or project, please cite it using the metadata below."
+authors:
+  - family-names: "OpenReason Authors"
+    given-names: "Quipos"
+    email: "quipos@gmail.com"
+title: "OpenReason: Multi-Paradigm AST Reasoning Framework and LLM Evaluation Engine"
+version: 1.0.0
+date-released: 2026-07-28
+url: "https://github.com/quipos/openreason"
+repository-code: "https://github.com/quipos/openreason"
+keywords:
+  - artificial intelligence
+  - reasoning engine
+  - tree of thoughts
+  - formal logic
+  - AST analysis
+  - gemini
+  - openrouter
+  - llm benchmark
+license: MIT

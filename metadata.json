@@ -1,0 +1,8 @@
+{
+  "name": "OpenReason AI",
+  "description": "System 2 reasoning engine and benchmarking suite featuring transparent logic formalization, BenchKit AST accuracy metrics, and epistemic hallucination audit traps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
