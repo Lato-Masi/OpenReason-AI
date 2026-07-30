@@ -39,12 +39,18 @@ async function startServer() {
   // /api/chat route protected with express-rate-limit middleware
   app.post("/api/chat", chatRateLimiter, async (req, res) => {
     try {
-      const { prompt, mode, model, temperature, systemInstruction } = req.body || {};
+      const { prompt, contents, mode, model, temperature, systemInstruction, config } = req.body || {};
 
-      if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
+      const reqContents = contents || (
+        systemInstruction 
+          ? `${systemInstruction}\n\nUser Request: ${prompt}`
+          : prompt
+      );
+
+      if (!reqContents) {
         return res.status(400).json({ 
           error: "Bad Request", 
-          message: "A valid non-empty 'prompt' string parameter is required in the request body." 
+          message: "A valid non-empty 'prompt' or 'contents' parameter is required in the request body." 
         });
       }
 
@@ -59,23 +65,22 @@ async function startServer() {
       const ai = new GoogleGenAI({ apiKey });
       const targetModel = model || "gemini-3.6-flash";
 
-      const fullPrompt = systemInstruction 
-        ? `${systemInstruction}\n\nUser Request: ${prompt}`
-        : prompt;
+      const reqConfig = config || {
+        temperature: typeof temperature === 'number' ? temperature : 0.7,
+      };
 
       const response = await ai.models.generateContent({
         model: targetModel,
-        contents: fullPrompt,
-        config: {
-          temperature: typeof temperature === 'number' ? temperature : 0.7,
-        }
+        contents: reqContents,
+        config: reqConfig
       });
 
       return res.json({
         success: true,
-        text: response.text,
+        text: response.text || "",
         model: targetModel,
         mode: mode || "chat",
+        candidates: response.candidates || [],
         usage: response.usageMetadata || null
       });
 

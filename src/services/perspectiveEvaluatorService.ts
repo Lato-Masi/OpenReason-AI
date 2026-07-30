@@ -8,7 +8,7 @@
  * 5. Sustainability (Long-term maintainability, resilience, adaptability)
  */
 
-import { getGenAIClient } from "./apiKeyService";
+import { generateGeminiContentProxy } from "./apiKeyService";
 import { MultiPerspectiveResult } from "../types";
 import { isOpenRouterModel, generateOpenRouterContent } from "./openrouterService";
 import { 
@@ -57,7 +57,6 @@ export async function evaluateMultiPerspective(
 ): Promise<MultiPerspectiveResult> {
   const schema = zodToJsonSchema(MultiPerspectiveSchema);
   const evalPrompt = MULTI_PERSPECTIVE_PROMPT(prompt, answer);
-  const ai = getGenAIClient();
 
   let jsonText = "";
 
@@ -73,7 +72,7 @@ export async function evaluateMultiPerspective(
       jsonText = res.text || "";
     } catch (err) {
       console.warn("OpenRouter multi-perspective eval failed, falling back to Gemini:", err);
-      const res = await ai.models.generateContent({
+      const res = await generateGeminiContentProxy({
         model: "gemini-3.6-flash",
         contents: evalPrompt,
         config: {
@@ -86,7 +85,7 @@ export async function evaluateMultiPerspective(
     }
   } else {
     try {
-      const res = await ai.models.generateContent({
+      const res = await generateGeminiContentProxy({
         model: modelName,
         contents: evalPrompt,
         config: {
@@ -98,7 +97,7 @@ export async function evaluateMultiPerspective(
       jsonText = res.text || "";
     } catch (err: any) {
       if (modelName !== "gemini-3.6-flash") {
-        const res = await ai.models.generateContent({
+        const res = await generateGeminiContentProxy({
           model: "gemini-3.6-flash",
           contents: evalPrompt,
           config: {

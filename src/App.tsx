@@ -76,7 +76,7 @@ import { hasCustomGeminiKey, hasCustomOpenRouterKey } from './services/apiKeySer
 import { formatLLMError, FormattedLLMError } from './services/llmErrorAdapter';
 import { BenchmarkPreset } from './data/benchmarkPresets';
 import { saveMemory } from './services/db';
-import Markdown from 'react-markdown';
+import { FormattedMarkdown } from './components/FormattedMarkdown';
 
 const ModelSelect = ({
   value,
@@ -1442,7 +1442,7 @@ export default function App() {
                               </div>
                               <div className={`pl-2 sm:pl-4 py-2 border-l border-zinc-800 transition-all ${idx === steps.length - 1 ? 'border-emerald-500/50 bg-emerald-500/[0.02]' : ''}`}>
                                 <div className="prose prose-invert prose-xs max-w-none leading-relaxed opacity-90 break-words text-zinc-300">
-                                  <Markdown>{step.content}</Markdown>
+                                  <FormattedMarkdown content={step.content} />
                                 </div>
                                 
                                 <AnimatePresence>
@@ -1461,7 +1461,7 @@ export default function App() {
                                             <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Cognitive Process Summary</span>
                                           </div>
                                           <div className="prose prose-invert prose-xs max-w-none text-blue-200/80 leading-relaxed pl-2 border-l-2 border-blue-500/30 break-words text-[10px] sm:text-[11px]">
-                                            <Markdown>{step.thought}</Markdown>
+                                            <FormattedMarkdown content={step.thought} />
                                           </div>
                                         </div>
                                       )}
@@ -1496,7 +1496,7 @@ export default function App() {
                                             <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Verification Evidence</span>
                                           </div>
                                           <div className="prose prose-invert prose-xs max-w-none text-zinc-300 leading-relaxed italic border-l-2 border-emerald-500/30 pl-3 text-[10px] sm:text-[11px]">
-                                            <Markdown>{step.evidence}</Markdown>
+                                            <FormattedMarkdown content={step.evidence} />
                                           </div>
                                         </div>
                                       )}
@@ -1658,7 +1658,7 @@ export default function App() {
 
                           <div className="bg-zinc-900 border border-zinc-800 rounded p-3 sm:p-4 shadow-2xl">
                             <div className="prose prose-invert prose-sm max-w-none text-zinc-100 leading-relaxed selection:bg-emerald-500 selection:text-black text-xs sm:text-sm break-words">
-                              <Markdown>{currentResult.finalAnswer}</Markdown>
+                              <FormattedMarkdown content={currentResult.finalAnswer} />
                             </div>
                           </div>
 
@@ -1828,11 +1828,11 @@ export default function App() {
                               <label className="text-[10px] text-zinc-400 font-mono uppercase tracking-tight">Active Engine</label>
                               {isOpenRouterModel(selectedModel) && (
                                 <span className={`text-[8px] px-1 py-0.5 rounded font-mono font-bold uppercase ${
-                                  process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'MY_OPENROUTER_API_KEY'
+                                  hasCustomOpenRouterKey()
                                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                     : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                                 }`}>
-                                  {process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'MY_OPENROUTER_API_KEY' ? 'OpenRouter API' : 'Key Unset'}
+                                  {hasCustomOpenRouterKey() ? 'OpenRouter (BYOK)' : 'Key Unset (BYOK Required)'}
                                 </span>
                               )}
                             </div>
@@ -2001,11 +2001,11 @@ export default function App() {
                             <label className="text-[10px] text-zinc-400 font-mono uppercase tracking-tight">Active Engine</label>
                             {isOpenRouterModel(selectedModel) && (
                               <span className={`text-[8px] px-1 py-0.5 rounded font-mono font-bold uppercase ${
-                                hasCustomOpenRouterKey() || (process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'MY_OPENROUTER_API_KEY')
+                                hasCustomOpenRouterKey()
                                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                   : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                               }`}>
-                                {hasCustomOpenRouterKey() ? 'BYOK Active' : process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== 'MY_OPENROUTER_API_KEY' ? 'OpenRouter API' : 'Key Unset'}
+                                {hasCustomOpenRouterKey() ? 'BYOK Active' : 'Key Unset (BYOK Required)'}
                               </span>
                             )}
                           </div>

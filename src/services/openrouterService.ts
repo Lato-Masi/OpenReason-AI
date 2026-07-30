@@ -187,7 +187,7 @@ export async function generateOpenRouterContent(params: OpenRouterGenerateParams
     method: "POST",
     headers: {
       "Authorization": `Bearer ${apiKey}`,
-      "HTTP-Referer": process.env.APP_URL || "https://openreason.ai",
+      "HTTP-Referer": typeof window !== 'undefined' ? window.location.origin : "https://openreason.ai",
       "X-Title": "OpenReason AI Pipeline",
       "Content-Type": "application/json"
     },

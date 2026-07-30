@@ -19,7 +19,7 @@ import {
   DomainParadigm, 
   ReasoningModality 
 } from "./domainStrategyRegistry";
-import { getGenAIClient } from "./apiKeyService";
+import { getGenAIClient, generateGeminiContentProxy } from "./apiKeyService";
 import { auditReasoningFlaws } from "./biasDetectorService";
 import { analyzeAssumptions } from "./assumptionService";
 import { formatLLMError } from "./llmErrorAdapter";
@@ -38,7 +38,6 @@ async function dispatchModelCall(
 ) {
   const jsonSchema = options?.zodSchema ? zodToJsonSchema(options.zodSchema) : undefined;
   const mimeType = options?.zodSchema ? "application/json" : options?.responseMimeType;
-  const ai = getGenAIClient();
 
   if (isOpenRouterModel(cfg.model)) {
     try {
@@ -55,7 +54,7 @@ async function dispatchModelCall(
     } catch (openRouterErr: any) {
       console.warn(`OpenRouter model ${cfg.model} call on ${stage} failed, using Gemini fallback:`, openRouterErr);
       const fallbackModel = "gemini-3.6-flash";
-      const fallbackRes = await ai.models.generateContent({
+      const fallbackRes = await generateGeminiContentProxy({
         model: fallbackModel,
         contents: prompt,
         config: { 
@@ -91,7 +90,7 @@ async function dispatchModelCall(
   }
 
   try {
-    return await ai.models.generateContent({
+    return await generateGeminiContentProxy({
       model: cfg.model,
       contents: prompt,
       config: { 
@@ -106,7 +105,7 @@ async function dispatchModelCall(
     const errStr = err?.message || String(err);
     if ((errStr.includes("PERMISSION_DENIED") || errStr.includes("403") || errStr.includes("not found") || errStr.includes("404")) && cfg.model !== "gemini-3.6-flash") {
       console.warn(`Model ${cfg.model} call on ${stage} failed (${errStr}), falling back to gemini-3.6-flash`);
-      return await ai.models.generateContent({
+      return await generateGeminiContentProxy({
         model: "gemini-3.6-flash",
         contents: prompt,
         config: { 
@@ -257,7 +256,6 @@ export interface IntentAnalysis {
 }
 
 export async function analyzeIntent(prompt: string, modelOverride?: string): Promise<IntentAnalysis> {
-  const ai = getGenAIClient();
   const modelName = modelOverride || "gemini-3.6-flash";
   const intentSchema = zodToJsonSchema(IntentAnalysisSchema);
   
@@ -273,7 +271,7 @@ export async function analyzeIntent(prompt: string, modelOverride?: string): Pro
       });
       text = res.text || "";
     } catch (err) {
-      const response = await ai.models.generateContent({
+      const response = await generateGeminiContentProxy({
         model: "gemini-3.6-flash",
         contents: Prompts.INTENT_ANALYZER_PROMPT(prompt),
         config: { 
@@ -286,7 +284,7 @@ export async function analyzeIntent(prompt: string, modelOverride?: string): Pro
     }
   } else {
     try {
-      const response = await ai.models.generateContent({
+      const response = await generateGeminiContentProxy({
         model: modelName,
         contents: Prompts.INTENT_ANALYZER_PROMPT(prompt),
         config: { 
@@ -298,7 +296,7 @@ export async function analyzeIntent(prompt: string, modelOverride?: string): Pro
       text = response.text || "";
     } catch (err: any) {
       if (modelName !== "gemini-3.6-flash") {
-        const response = await ai.models.generateContent({
+        const response = await generateGeminiContentProxy({
           model: "gemini-3.6-flash",
           contents: Prompts.INTENT_ANALYZER_PROMPT(prompt),
           config: { 

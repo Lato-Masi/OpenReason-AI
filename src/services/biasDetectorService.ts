@@ -3,7 +3,7 @@
  * Evaluates reasoning steps against the Cognitive Biases and Logical Fallacies catalogs.
  */
 
-import { getGenAIClient } from "./apiKeyService";
+import { generateGeminiContentProxy } from "./apiKeyService";
 import { COGNITIVE_BIASES_CATALOG, LOGICAL_FALLACIES_CATALOG } from "./taxonomyRegistry";
 import { ReasoningFlawCheck, FlawAuditResult } from "../types";
 import { isOpenRouterModel, generateOpenRouterContent } from "./openrouterService";
@@ -127,7 +127,6 @@ export async function auditReasoningFlaws(
 ): Promise<FlawAuditResult> {
   const schema = zodToJsonSchema(FlawAuditSchema);
   const auditPrompt = AUDIT_FLAWS_PROMPT(prompt, reasoningText);
-  const ai = getGenAIClient();
 
   let jsonText = "";
 
@@ -143,7 +142,7 @@ export async function auditReasoningFlaws(
       jsonText = res.text || "";
     } catch (err) {
       console.warn("OpenRouter flaw audit failed, falling back to Gemini:", err);
-      const res = await ai.models.generateContent({
+      const res = await generateGeminiContentProxy({
         model: "gemini-3.6-flash",
         contents: auditPrompt,
         config: {
@@ -156,7 +155,7 @@ export async function auditReasoningFlaws(
     }
   } else {
     try {
-      const res = await ai.models.generateContent({
+      const res = await generateGeminiContentProxy({
         model: modelName,
         contents: auditPrompt,
         config: {
@@ -168,7 +167,7 @@ export async function auditReasoningFlaws(
       jsonText = res.text || "";
     } catch (err: any) {
       if (modelName !== "gemini-3.6-flash") {
-        const res = await ai.models.generateContent({
+        const res = await generateGeminiContentProxy({
           model: "gemini-3.6-flash",
           contents: auditPrompt,
           config: {

@@ -20,6 +20,35 @@
   }
 }
 
+/* Custom table styling for FormattedMarkdown */
+.markdown-body table {
+  @apply w-full border-collapse text-left text-xs sm:text-sm text-zinc-300;
+}
+
+.markdown-body thead {
+  @apply bg-zinc-800/90 font-mono text-zinc-100 uppercase tracking-wider text-[11px] border-b-2 border-zinc-700;
+}
+
+.markdown-body th {
+  @apply px-4 py-2.5 font-bold text-emerald-400 border border-zinc-800/90 bg-zinc-900/80;
+}
+
+.markdown-body td {
+  @apply px-4 py-2 text-zinc-300 border border-zinc-800/60 leading-relaxed whitespace-normal;
+}
+
+.markdown-body tbody tr:nth-child(odd) {
+  @apply bg-zinc-950/80;
+}
+
+.markdown-body tbody tr:nth-child(even) {
+  @apply bg-zinc-900/40;
+}
+
+.markdown-body tbody tr:hover {
+  @apply bg-emerald-500/10 transition-colors;
+}
+
 /* Custom scrollbar for high density look */
 ::-webkit-scrollbar {
   width: 4px;

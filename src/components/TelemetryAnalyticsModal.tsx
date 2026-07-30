@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import Markdown from 'react-markdown';
+import { FormattedMarkdown } from './FormattedMarkdown';
 import { 
   X, Activity, BarChart3, Database, Download, Upload, Trash2, 
   CheckCircle2, AlertTriangle, XCircle, ShieldCheck, Zap, DollarSign,
@@ -889,7 +889,7 @@ export const TelemetryAnalyticsModal: React.FC<TelemetryAnalyticsModalProps> = (
                                 )}
 
                                 <div className="prose prose-invert prose-xs max-w-none text-zinc-300 text-[11px] leading-relaxed">
-                                  <Markdown>{step.content}</Markdown>
+                                  <FormattedMarkdown content={step.content} />
                                 </div>
 
                                 {step.codeExecution && (
@@ -936,7 +936,7 @@ export const TelemetryAnalyticsModal: React.FC<TelemetryAnalyticsModalProps> = (
                                 )}
 
                                 <div className="prose prose-invert prose-xs max-w-none text-zinc-300 text-[11px] leading-relaxed">
-                                  <Markdown>{step.content}</Markdown>
+                                  <FormattedMarkdown content={step.content} />
                                 </div>
 
                                 {step.codeExecution && (
@@ -976,7 +976,7 @@ export const TelemetryAnalyticsModal: React.FC<TelemetryAnalyticsModalProps> = (
                             </button>
                           </div>
                           <div className="prose prose-invert prose-xs max-w-none text-zinc-200 text-xs leading-relaxed max-h-72 overflow-y-auto">
-                            <Markdown>{runA.finalAnswer || 'No final answer recorded.'}</Markdown>
+                            <FormattedMarkdown content={runA.finalAnswer || 'No final answer recorded.'} />
                           </div>
                         </div>
 
@@ -992,7 +992,7 @@ export const TelemetryAnalyticsModal: React.FC<TelemetryAnalyticsModalProps> = (
                             </button>
                           </div>
                           <div className="prose prose-invert prose-xs max-w-none text-zinc-200 text-xs leading-relaxed max-h-72 overflow-y-auto">
-                            <Markdown>{runB.finalAnswer || 'No final answer recorded.'}</Markdown>
+                            <FormattedMarkdown content={runB.finalAnswer || 'No final answer recorded.'} />
                           </div>
                         </div>
                       </div>

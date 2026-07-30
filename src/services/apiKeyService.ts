@@ -14,19 +14,11 @@ export function getStoredOpenRouterKey(): string {
 }
 
 export function getEffectiveGeminiKey(): string {
-  const custom = getStoredGeminiKey();
-  if (custom && custom.trim().length > 0) {
-    return custom.trim();
-  }
-  return process.env.GEMINI_API_KEY || '';
+  return getStoredGeminiKey().trim();
 }
 
 export function getEffectiveOpenRouterKey(): string {
-  const custom = getStoredOpenRouterKey();
-  if (custom && custom.trim().length > 0) {
-    return custom.trim();
-  }
-  return process.env.OPENROUTER_API_KEY || '';
+  return getStoredOpenRouterKey().trim();
 }
 
 export function setGeminiKey(key: string): void {
@@ -68,6 +60,54 @@ export function hasCustomOpenRouterKey(): boolean {
 export function getGenAIClient(): GoogleGenAI {
   const apiKey = getEffectiveGeminiKey();
   return new GoogleGenAI({ apiKey });
+}
+
+export async function generateGeminiContentProxy(params: {
+  model: string;
+  contents: any;
+  config?: any;
+}): Promise<{ text: string; candidates?: any; usage?: any }> {
+  const customKey = getStoredGeminiKey().trim();
+
+  // If user provided custom BYOK key, execute directly on client with user's key
+  if (customKey) {
+    const ai = new GoogleGenAI({ apiKey: customKey });
+    const res = await ai.models.generateContent({
+      model: params.model,
+      contents: params.contents,
+      config: params.config
+    });
+    return {
+      text: res.text || "",
+      candidates: res.candidates,
+      usage: res.usageMetadata
+    };
+  }
+
+  // Otherwise, route through server /api/chat endpoint where GEMINI_API_KEY is safely stored on Node server
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: params.model,
+      contents: params.contents,
+      config: params.config
+    })
+  });
+
+  if (!response.ok) {
+    const errorJson = await response.json().catch(() => null);
+    throw new Error(errorJson?.message || `Server returned HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  return {
+    text: data.text || "",
+    candidates: data.candidates || [],
+    usage: data.usage || null
+  };
 }
 
 export const API_KEY_URLS = {

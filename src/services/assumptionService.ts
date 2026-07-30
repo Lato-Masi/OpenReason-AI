@@ -5,7 +5,7 @@
  * 3. Assumption-Driven Reasoning & Probabilistic Profile Branching
  */
 
-import { getGenAIClient } from "./apiKeyService";
+import { generateGeminiContentProxy } from "./apiKeyService";
 import { AssumptionAnalysisResult, AssumptionItem, AssumptionValidation, AssumptionProfile } from "../types";
 import { isOpenRouterModel, generateOpenRouterContent } from "./openrouterService";
 import { 
@@ -87,7 +87,6 @@ export async function analyzeAssumptions(
 ): Promise<AssumptionAnalysisResult> {
   const schema = zodToJsonSchema(AssumptionAnalysisSchema);
   const evalPrompt = ASSUMPTION_ANALYSIS_PROMPT(prompt);
-  const ai = getGenAIClient();
 
   let jsonText = "";
 
@@ -103,7 +102,7 @@ export async function analyzeAssumptions(
       jsonText = res.text || "";
     } catch (err) {
       console.warn("OpenRouter assumption analysis failed, falling back to Gemini:", err);
-      const res = await ai.models.generateContent({
+      const res = await generateGeminiContentProxy({
         model: "gemini-3.6-flash",
         contents: evalPrompt,
         config: {
@@ -116,7 +115,7 @@ export async function analyzeAssumptions(
     }
   } else {
     try {
-      const res = await ai.models.generateContent({
+      const res = await generateGeminiContentProxy({
         model: modelName,
         contents: evalPrompt,
         config: {
@@ -128,7 +127,7 @@ export async function analyzeAssumptions(
       jsonText = res.text || "";
     } catch (err: any) {
       if (modelName !== "gemini-3.6-flash") {
-        const res = await ai.models.generateContent({
+        const res = await generateGeminiContentProxy({
           model: "gemini-3.6-flash",
           contents: evalPrompt,
           config: {

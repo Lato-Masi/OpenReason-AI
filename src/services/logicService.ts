@@ -1,4 +1,4 @@
-import { getGenAIClient } from "./apiKeyService";
+import { generateGeminiContentProxy } from "./apiKeyService";
 import * as Prompts from "./prompts";
 import { isOpenRouterModel, generateOpenRouterContent } from "./openrouterService";
 
@@ -23,7 +23,6 @@ export async function formalizeReasoning(
   solverOutput: string,
   modelName: string = "gemini-3.6-flash"
 ): Promise<FormalLogicModule | null> {
-  const ai = getGenAIClient();
   try {
     const formalizerPrompt = `
       OpenReason Formalizer [HOL/FOL Mapping]:
@@ -54,7 +53,7 @@ export async function formalizeReasoning(
         });
         text = res.text || "";
       } catch (e) {
-        const res = await ai.models.generateContent({
+        const res = await generateGeminiContentProxy({
           model: "gemini-3.6-flash",
           contents: formalizerPrompt,
           config: { temperature: 0.1, responseMimeType: "application/json" }
@@ -63,7 +62,7 @@ export async function formalizeReasoning(
       }
     } else {
       try {
-        const result = await ai.models.generateContent({
+        const result = await generateGeminiContentProxy({
           model: modelName,
           contents: formalizerPrompt,
           config: { 
@@ -74,7 +73,7 @@ export async function formalizeReasoning(
         text = result.text || "";
       } catch (e: any) {
         if (modelName !== "gemini-3.6-flash") {
-          const result = await ai.models.generateContent({
+          const result = await generateGeminiContentProxy({
             model: "gemini-3.6-flash",
             contents: formalizerPrompt,
             config: { temperature: 0.1, responseMimeType: "application/json" }

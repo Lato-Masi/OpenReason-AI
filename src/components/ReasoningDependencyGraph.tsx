@@ -20,7 +20,7 @@ import {
   FileText,
   Key
 } from 'lucide-react';
-import Markdown from 'react-markdown';
+import { FormattedMarkdown } from './FormattedMarkdown';
 import { ReasoningStep, ReasoningResult, DiscoveryNode } from '../services/reasoningEngine';
 import { ReasoningFlawCheck } from '../types';
 
@@ -717,7 +717,7 @@ export const ReasoningDependencyGraph: React.FC<ReasoningDependencyGraphProps> =
                 <div>
                   <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block mb-1">Node Output Payload</span>
                   <div className="bg-black/60 p-3 rounded-lg border border-zinc-800/80 text-[11px] font-sans leading-relaxed text-zinc-200 overflow-x-auto max-h-48 overflow-y-auto">
-                    <Markdown>{selectedNode.content}</Markdown>
+                    <FormattedMarkdown content={selectedNode.content} />
                   </div>
                 </div>
               )}
