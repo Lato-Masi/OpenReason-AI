@@ -26,7 +26,7 @@ OpenReason operates on a **Bring Your Own Key (BYOK)** client-side paradigm:
 If you discover a potential security vulnerability in OpenReason (such as improper API key exposure, cross-site scripting vulnerabilities, or state leaks), please report it responsibly:
 
 1. **Do NOT open a public GitHub issue** for undisclosed security bugs.
-2. Email the maintainers directly at `quipos@gmail.com` with:
+2. Email the maintainers directly at `ray@bcap.biz` with:
    - Description of the vulnerability.
    - Steps to reproduce the issue.
    - Potential risk assessment and proposed mitigations.

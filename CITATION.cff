@@ -3,7 +3,7 @@ message: "If you use OpenReason in your research or project, please cite it usin
 authors:
   - family-names: "OpenReason Authors"
     given-names: "Quipos"
-    email: "quipos@gmail.com"
+    email: "ray@bcap.biz"
 title: "OpenReason: Multi-Paradigm AST Reasoning Framework and LLM Evaluation Engine"
 version: 1.0.0
 date-released: 2026-07-28

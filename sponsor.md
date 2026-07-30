@@ -11,6 +11,7 @@ Research and development for **OpenReason AI** is sponsored by **Buoyant Capital
 
 - **Primary Creator**: Ray Garcia
 - **LinkedIn / Bio**: [https://www.linkedin.com/in/alterwork](https://www.linkedin.com/in/alterwork)
+- **Source Code Repository**: [https://github.com/Lato-Masi/OpenReason-AI](https://github.com/Lato-Masi/OpenReason-AI)
 
 ---
 

@@ -611,6 +611,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           >
             Ray Garcia
           </a>
+          {' '}&bull; Source Code Available at{' '}
+          <a 
+            href="https://github.com/Lato-Masi/OpenReason-AI" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors font-medium"
+          >
+            GitHub
+          </a>
         </p>
       </footer>
 
