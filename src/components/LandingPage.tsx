@@ -590,8 +590,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </main>
 
       {/* Landing Footer */}
-      <footer className="border-t border-zinc-800/80 bg-zinc-950 py-6 px-4 sm:px-8 text-center text-xs font-mono text-zinc-500">
+      <footer className="border-t border-zinc-800/80 bg-zinc-950 py-6 px-4 sm:px-8 text-center text-xs font-mono text-zinc-500 space-y-2">
         <p>OpenReason AI Framework • Transparent System 2 Cognitive Trace & AST Verification Engine</p>
+        <p className="text-[11px] text-zinc-400">
+          Research sponsored by{' '}
+          <a 
+            href="https://bcap.biz" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors font-medium"
+          >
+            Buoyant Capital
+          </a>
+          {' '}&bull; Created by{' '}
+          <a 
+            href="https://www.linkedin.com/in/alterwork" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors font-medium"
+          >
+            Ray Garcia
+          </a>
+        </p>
       </footer>
 
     </div>
